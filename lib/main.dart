@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:task_game/data/local/achievement_db_helper.dart';
+import 'package:task_game/data/local/quest_helper.dart';
+import 'package:task_game/data/local/reward_helper.dart';
 import 'package:task_game/main_screen.dart';
 import 'package:task_game/quests/create_quest_view.dart';
 import 'package:task_game/rewards/create_reward_view.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
-  await seedAchievements();
+  // await seedAchievements();
+
+  await QuestDatabaseHelper.instance.fetchAllQuests();
+  await RewardDatabaseHelper.instance.fetchAllRewards();
+
+  final allQuests = await QuestDatabaseHelper.instance.fetchAllQuests();
+  print('All Quests: $allQuests');
+
+  final allRewards = await RewardDatabaseHelper.instance.fetchAllRewards();
+  print('All Rewards: $allRewards');
 }
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_game/data/local/quest_helper.dart';
+import 'package:task_game/data/local/reward_helper.dart';
 import 'package:task_game/home/home_view.dart';
 import 'package:task_game/profile/profile_view.dart';
 import 'package:task_game/quests/quest_view.dart';
@@ -37,6 +39,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: (_selectedIndex == 0)
+          ? FloatingActionButton.small(onPressed: () {
+              RewardDatabaseHelper.instance.shareRewardsDatabaseFile();
+            })
+          : null,
       appBar: AppBar(
         toolbarHeight: 70,
         shape: Border.all(color: Colors.grey.shade300),

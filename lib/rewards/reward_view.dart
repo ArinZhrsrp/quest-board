@@ -33,7 +33,7 @@ class _RewardsPageState extends State<RewardsPage>
   }
 
   void _onCreateQuestPressed() {
-    // TODO: handle creating quest
+    Navigator.pushNamed(context, '/createRewards');
   }
 
   @override

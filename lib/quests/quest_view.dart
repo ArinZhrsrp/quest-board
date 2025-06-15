@@ -34,7 +34,7 @@ class _QuestsPageState extends State<QuestsPage>
   }
 
   void _onCreateQuestPressed() {
-    // TODO: handle creating quest
+    Navigator.pushNamed(context, '/createQuest');
   }
 
   @override
