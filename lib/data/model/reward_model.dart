@@ -1,10 +1,42 @@
+enum RewardStatus { available, claimed }
+
+extension RewardStatusExtension on RewardStatus {
+  String get label {
+    switch (this) {
+      case RewardStatus.claimed:
+        return 'Claimed';
+      case RewardStatus.available:
+        return 'Available';
+    }
+  }
+
+  static RewardStatus fromInt(int value) {
+    switch (value) {
+      case 1:
+        return RewardStatus.claimed;
+      case 0:
+      default:
+        return RewardStatus.available;
+    }
+  }
+
+  int get toInt {
+    switch (this) {
+      case RewardStatus.claimed:
+        return 1;
+      case RewardStatus.available:
+        return 0;
+    }
+  }
+}
+
 class Reward {
   final int? id;
   final String title;
   final String description;
   final int pointsCost;
   final int iconIndex;
-  final int status; // 0 = not redeemed, 1 = redeemed
+  final RewardStatus status;
 
   Reward({
     this.id,
@@ -12,7 +44,7 @@ class Reward {
     required this.description,
     required this.pointsCost,
     required this.iconIndex,
-    this.status = 0,
+    this.status = RewardStatus.available,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,7 +54,7 @@ class Reward {
       'description': description,
       'pointsCost': pointsCost,
       'iconIndex': iconIndex,
-      'status': status,
+      'status': status.toInt,
     };
   }
 
@@ -33,12 +65,12 @@ class Reward {
       description: map['description'],
       pointsCost: map['pointsCost'],
       iconIndex: map['iconIndex'],
-      status: map['status'] ?? 0,
+      status: RewardStatusExtension.fromInt(map['status'] ?? 0),
     );
   }
 
   @override
   String toString() {
-    return 'Reward{id: $id, title: "$title", description: "$description", pointsCost: $pointsCost, iconIndex: $iconIndex, status: $status}';
+    return 'Reward{id: $id, title: "$title", description: "$description", pointsCost: $pointsCost, iconIndex: $iconIndex, status: ${status.label}}';
   }
 }

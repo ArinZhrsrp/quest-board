@@ -5,6 +5,17 @@ extension QuestStatusExtension on QuestStatus {
     return toString().split('.').last;
   }
 
+  String get label {
+    switch (this) {
+      case QuestStatus.completed:
+        return 'Completed';
+      case QuestStatus.failed:
+        return 'Failed';
+      case QuestStatus.active:
+        return 'Active';
+    }
+  }
+
   static QuestStatus fromString(String status) {
     switch (status) {
       case 'completed':
@@ -34,6 +45,24 @@ class Quest {
     this.deadlineDateTime,
     this.status = QuestStatus.active,
   });
+
+  Quest copyWith({
+    int? id,
+    String? title,
+    String? description,
+    int? pointsReward,
+    DateTime? deadlineDateTime,
+    QuestStatus? status,
+  }) {
+    return Quest(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      pointsReward: pointsReward ?? this.pointsReward,
+      deadlineDateTime: deadlineDateTime ?? this.deadlineDateTime,
+      status: status ?? this.status,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
