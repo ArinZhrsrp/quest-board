@@ -94,6 +94,19 @@ class RewardDatabaseHelper {
     return result.map((map) => Reward.fromMap(map)).toList();
   }
 
+  Future<List<Reward>> fetchRewardsByStatus(RewardStatus status) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'rewards',
+      where: 'status = ?',
+      whereArgs: [status.toInt],
+      orderBy: 'id DESC',
+    );
+
+    return result.map((json) => Reward.fromMap(json)).toList();
+  }
+
   // SHARE DB FILE
   Future<void> shareRewardsDatabaseFile() async {
     final dir = await getApplicationDocumentsDirectory();

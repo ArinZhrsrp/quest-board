@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:task_game/data/local/quest_helper.dart';
 import 'package:task_game/data/local/reward_helper.dart';
 import 'package:task_game/home/home_view.dart';
 import 'package:task_game/profile/profile_view.dart';
-import 'package:task_game/quests/quest_view.dart';
+import 'package:task_game/quests/quest_page_view.dart';
 import 'package:task_game/rewards/reward_view.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => MainScreenState();
+
+  static final ValueNotifier<int> selectedTabNotifier = ValueNotifier<int>(0);
 }
 
-class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+class MainScreenState extends State<MainScreen> {
+  int _selectedIndex = MainScreen.selectedTabNotifier.value;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    QuestsPage(),
-    RewardsPage(),
-    ProfilePage(),
-  ];
+  int questTabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    MainScreen.selectedTabNotifier.addListener(() {
+      setState(() {
+        _selectedIndex = MainScreen.selectedTabNotifier.value;
+      });
+    });
+  }
 
   void _onNavTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (_selectedIndex != index) {
+      // Reset quest tab index only if switching to another tab
+      if (index != 1) questTabIndex = 0;
+      MainScreen.selectedTabNotifier.value = index;
+    }
   }
 
   static const List<String> _titles = [
@@ -35,6 +43,26 @@ class _MainScreenState extends State<MainScreen> {
     'Rewards',
     'Profile'
   ];
+
+  Widget _buildPage(int index) {
+    switch (index) {
+      case 0:
+        return const HomePage();
+      case 1:
+        // Add UniqueKey to force rebuild even if same tab
+        return QuestsPage(
+          key: ValueKey(
+              'quests_${questTabIndex}_${DateTime.now().millisecondsSinceEpoch}'),
+          initialTabIndex: questTabIndex,
+        );
+      case 2:
+        return const RewardsPage();
+      case 3:
+        return const ProfilePage();
+      default:
+        return const HomePage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +77,7 @@ class _MainScreenState extends State<MainScreen> {
         shape: Border.all(color: Colors.grey.shade300),
         title: Text(
           _titles[_selectedIndex],
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 30,
@@ -59,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Colors.white,
         centerTitle: false,
       ),
-      body: _pages[_selectedIndex],
+      body: _buildPage(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[600],

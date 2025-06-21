@@ -2,7 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:task_game/components/custom_button.dart';
-import 'package:task_game/shared/empty_state.dart';
+import 'package:task_game/data/local/quest_helper.dart';
+import 'package:task_game/data/model/quest_model.dart';
+import 'package:task_game/data/model/reward_model.dart';
+import 'package:task_game/quests/quest_list_preview.dart';
+import 'package:task_game/rewards/reward_list_preview.dart';
 import 'package:task_game/shared/stats_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,10 +41,27 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     Expanded(
-                      child: StatsCard(
-                        title: 'Active Quests',
-                        value: '0',
-                        icon: Icons.list_alt_rounded,
+                      child: FutureBuilder<List<Quest>>(
+                        future: QuestDatabaseHelper.instance
+                            .fetchQuestsByStatus(QuestStatus.active),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const StatsCard(
+                              title: 'Active Quests',
+                              value: '...',
+                              icon: Icons.list_alt_rounded,
+                            );
+                          }
+
+                          final count = snapshot.data?.length ?? 0;
+
+                          return StatsCard(
+                            title: 'Active Quests',
+                            value: '$count',
+                            icon: Icons.list_alt_rounded,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -67,37 +88,28 @@ class _HomePageState extends State<HomePage> {
                 // Active Quests Header
                 SectionHeader(
                   title: 'Active Quests',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/createQuest');
+                  },
                 ),
 
-                // No Active Quests Message
-                EmptyStateCard(),
+                // Active Quests List
+                QuestListPreview(status: QuestStatus.active),
                 const SizedBox(height: 32),
 
-                // Available Rewards Header
-
-                // Active Quests Header
+                // Active Rewards Header
                 SectionHeader(
                   title: 'Available Rewards',
                   onTap: () {},
                   isQuest: false,
                 ),
 
-                EmptyStateCard(
-                  isQuest: false,
+                // Available Rewards List
+                RewardListPreview(
+                  status: RewardStatus.available,
                 ),
 
-                // // Reward Card example, info as shown in screenshot
-                // RewardCard(
-                //   title: 'wdwq',
-                //   description: 'dadasd',
-                //   rewardPoints: 500,
-                //   onTap: () {
-                //     // TODO: Reward tap action
-                //   },
-                // ),
-
-                // Add more RewardCards here if needed
+                // Gap from bottom
                 const SizedBox(height: 40),
               ],
             ),

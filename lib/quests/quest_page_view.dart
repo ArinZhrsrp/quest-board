@@ -1,25 +1,24 @@
-// ---------------- Quests Page ----------------
-
 import 'package:flutter/material.dart';
-import 'package:task_game/data/model/reward_model.dart';
-import 'package:task_game/shared/reward_list.dart';
+import 'package:task_game/data/model/quest_model.dart';
+import 'package:task_game/shared/quest_list.dart';
 
-class RewardsPage extends StatefulWidget {
+class QuestsPage extends StatefulWidget {
   final int initialTabIndex;
-  const RewardsPage({super.key, this.initialTabIndex = 0});
+  const QuestsPage({super.key, this.initialTabIndex = 0});
 
   @override
-  State<RewardsPage> createState() => _RewardsPageState();
+  State<QuestsPage> createState() => _QuestsPageState();
 }
 
-class _RewardsPageState extends State<RewardsPage>
+class _QuestsPageState extends State<QuestsPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   static const List<Tab> _tabs = [
     Tab(text: 'All'),
-    Tab(text: 'Available'),
-    Tab(text: 'Claimed'),
+    Tab(text: 'Active'),
+    Tab(text: 'Completed'),
+    Tab(text: 'Failed'),
   ];
 
   @override
@@ -38,14 +37,14 @@ class _RewardsPageState extends State<RewardsPage>
     super.dispose();
   }
 
-  void onCreateRewardPressed() {
-    Navigator.pushNamed(context, '/createRewards');
-    setState(() {});
+  void _onCreateQuestPressed() {
+    Navigator.pushNamed(context, '/createQuest');
+    setState(() {}); // refresh when coming back
   }
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Colors.pinkAccent.shade100;
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Stack(
       children: [
@@ -63,9 +62,10 @@ class _RewardsPageState extends State<RewardsPage>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  RewardList(status: null),
-                  RewardList(status: RewardStatus.available),
-                  RewardList(status: RewardStatus.claimed),
+                  QuestList(status: null),
+                  QuestList(status: QuestStatus.active),
+                  QuestList(status: QuestStatus.completed),
+                  QuestList(status: QuestStatus.failed),
                 ],
               ),
             ),
@@ -75,7 +75,7 @@ class _RewardsPageState extends State<RewardsPage>
           bottom: 24,
           right: 24,
           child: FloatingActionButton(
-            onPressed: onCreateRewardPressed,
+            onPressed: _onCreateQuestPressed,
             backgroundColor: primaryColor,
             elevation: 0,
             child: const Icon(Icons.add_rounded, color: Colors.white),

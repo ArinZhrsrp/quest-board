@@ -15,29 +15,25 @@ class EmptyStateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
-          Icons.north_east_rounded,
-          size: 32,
+          isQuest ? Icons.list_alt_rounded : Icons.north_east_rounded,
+          size: 48,
           color: Colors.grey[400],
         ),
-        const SizedBox(height: 12),
-        Text(
-          isQuest ? 'No Active Quests' : 'No Rewards Yet',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
+        const SizedBox(height: 18),
+        Text(isQuest ? 'No Quests' : 'No Rewards ',
+            style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 6),
         Text(
           isQuest
               ? 'Start your journey by creating your first quest.'
               : 'Create rewards to motivate yourself.',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(color: Colors.grey[600]),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
