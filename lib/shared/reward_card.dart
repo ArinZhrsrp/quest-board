@@ -35,51 +35,64 @@ class RewardCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: primaryColor),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                // Title and Points
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(reward.title,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text('Cost: ${reward.pointsCost} pts',
-                        style: const TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.bold)),
-                  ],
+                Icon(icon, color: primaryColor, size: 50),
+                SizedBox(
+                  width: 10,
                 ),
-                const SizedBox(height: 8),
-                Text(reward.description),
-                const SizedBox(height: 8),
-                Row(children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                        color: primaryColor, shape: BoxShape.circle),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(reward.status.label,
-                      style: TextStyle(color: primaryColor)),
-                ]),
-
-                const SizedBox(height: 12),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (reward.status == RewardStatus.available)
-                      _redeemButton(context),
-                    const SizedBox(width: 12),
-                    _deleteButton(context),
+                    // Title and Points
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(reward.title,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(reward.description),
+                    const SizedBox(height: 8),
+                    Row(children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                            color: primaryColor, shape: BoxShape.circle),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(reward.status.label,
+                          style: TextStyle(color: primaryColor)),
+                    ]),
                   ],
                 ),
               ],
+            ),
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: Column(
+                children: [
+                  Text('Cost: ${reward.pointsCost} pts',
+                      style: const TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (reward.status == RewardStatus.available)
+                        _redeemButton(context),
+                      const SizedBox(width: 12),
+                      _deleteButton(context),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
